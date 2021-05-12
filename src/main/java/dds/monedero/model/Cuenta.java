@@ -43,7 +43,7 @@ public class Cuenta {
   }
 
   public void validarMontoNegativo(double cuanto){
-    if(cuanto < 0){
+    if(cuanto <= 0){
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
     }
   }
@@ -64,12 +64,14 @@ public class Cuenta {
   }
 
   public void sacar(double cuanto) {
-    if (cuanto <= 0) {
+    this.validarMontoNegativo(cuanto);
+    /*if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
-    }//CODE SMELL,ya explicado
-    if (getSaldo() - cuanto < 0) {
+    }//CODE SMELL,ya explicado*/
+    this.validarDineroDisponible(cuanto);
+    /*if (getSaldo() - cuanto < 0) {
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
-    }//CODE SMELL,lo mismo para este tipo de excepciones
+    }//CODE SMELL,lo mismo para este tipo de excepciones*/
     double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
     double limite = 1000 - montoExtraidoHoy;
     if (cuanto > limite) {
@@ -77,6 +79,12 @@ public class Cuenta {
           + " diarios, límite: " + limite);
     }
     new Movimiento(LocalDate.now(), cuanto, false);
+  }
+
+  public void validarDineroDisponible(double cuanto){
+    if( this.getSaldo() - cuanto < 0){
+      throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
+    }
   }
 
   public double getMontoExtraidoA(LocalDate fecha) {
