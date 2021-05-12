@@ -27,15 +27,29 @@ public class Cuenta {
   }CODE SMELL,se puede hacer un constructor de cuenta,que se inicialice con cero movimientos*/
 
   public void poner(double cuanto) {
-    if (cuanto <= 0) {
+    this.validarMontoNegativo(cuanto);
+    /*if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
-    }//CODE SMELL,podemos hacer un metodo validarMontoNegativo que se encargue de realizar la excepcion
+    }//CODE SMELL,podemos hacer un metodo validarMontoNegativo que se encargue de realizar la excepcion*/
 
-    if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
+    this.validar3DepositoriosDiarios();
+    /*if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
-    }//CODE SMELL,podemos abstraer la condicion del if, y hacer un metodo que retorno un booleano denominado validarDepositosDiarios
+    }//CODE SMELL,podemos abstraer la condicion del if, y hacer un metodo que retorno un booleano denominado validarDepositosDiarios*/
 
     new Movimiento(LocalDate.now(), cuanto, true);
+  }
+
+  public void validarMontoNegativo(double cuanto){
+    if(cuanto < 0){
+      throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
+    }
+  }
+
+  public void validar3DepositoriosDiarios(){
+    if(this.getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3){
+      throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
+    }
   }
 
   public void sacar(double cuanto) {
