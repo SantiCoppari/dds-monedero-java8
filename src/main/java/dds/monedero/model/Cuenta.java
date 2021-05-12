@@ -14,6 +14,10 @@ public class Cuenta {
   private double saldo = 0;
   private List<Movimiento> movimientos = new ArrayList<>();
 
+  public Cuenta(){
+    setSaldo(0);
+    setMovimientos(movimientos);
+  }
   /*public Cuenta() {
     saldo = 0;
   }
