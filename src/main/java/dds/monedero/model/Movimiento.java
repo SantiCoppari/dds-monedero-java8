@@ -43,16 +43,16 @@ public class Movimiento {
     return !esDeposito;
   }
 
-  public void agregateA(Cuenta cuenta) {
+  /*public void agregateA(Cuenta cuenta) {
     cuenta.setSaldo(calcularValor(cuenta));
     cuenta.agregarMovimiento(fecha, monto, esDeposito);
-  }
+  }CODE SMELL, la responsabilidad de agregar los movimientos es de la cuenta*/
 
-  public double calcularValor(Cuenta cuenta) {
+  /*public double calcularValor(Cuenta cuenta) {
     if (esDeposito) {
       return cuenta.getSaldo() + getMonto();
     } else {
       return cuenta.getSaldo() - getMonto();
     }
-  }
+  }CODE SMELL, la responsabilidad de ver cuanto dinero queda en la cuenta es de la cuenta*/
 }
