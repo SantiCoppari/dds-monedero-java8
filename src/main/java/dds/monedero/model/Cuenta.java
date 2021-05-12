@@ -49,7 +49,7 @@ public class Cuenta {
   }
 
   public void validar3DepositoriosDiarios(){
-    if(this.getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3){
+    if(this.getMovimientos().stream().filter(movimiento -> movimiento.fueDepositado(LocalDate.now())).count() >= 3){//CODE SMELL, usamos el metodo fueDepositado de Movimiento
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
   }
@@ -105,7 +105,7 @@ public class Cuenta {
 
   public double getMontoExtraidoA(LocalDate fecha) {
     return getMovimientos().stream()
-        .filter(movimiento -> movimiento.isExtraccion() && movimiento.esDeLaFecha(fecha))
+        .filter(movimiento -> movimiento.fueExtraido(fecha))//CODE SMELLS,usar metodo fueExtraido ya que se repetia codigo
         .mapToDouble(Movimiento::getMonto)
         .sum();
   }
