@@ -39,6 +39,7 @@ public class Cuenta {
 
     //new Movimiento(LocalDate.now(), cuanto, true); CODE SMELL,aca utilizamos el metodo que agrega movimientos a nuestra cuenta
     this.agregarMovimiento(LocalDate.now(),cuanto,true);
+    this.agregarSaldo(cuanto);
   }
 
   public void validarMontoNegativo(double cuanto){
@@ -51,6 +52,15 @@ public class Cuenta {
     if(this.getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3){
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
+  }
+
+  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
+    Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
+    movimientos.add(movimiento);
+  }
+
+  public void agregarSaldo(double cuanto){
+    saldo = this.getSaldo() + cuanto;
   }
 
   public void sacar(double cuanto) {
@@ -67,11 +77,6 @@ public class Cuenta {
           + " diarios, límite: " + limite);
     }
     new Movimiento(LocalDate.now(), cuanto, false);
-  }
-
-  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
-    Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
-    movimientos.add(movimiento);
   }
 
   public double getMontoExtraidoA(LocalDate fecha) {
