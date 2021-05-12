@@ -37,7 +37,8 @@ public class Cuenta {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }//CODE SMELL,podemos abstraer la condicion del if, y hacer un metodo que retorno un booleano denominado validarDepositosDiarios*/
 
-    new Movimiento(LocalDate.now(), cuanto, true);
+    //new Movimiento(LocalDate.now(), cuanto, true); CODE SMELL,aca utilizamos el metodo que agrega movimientos a nuestra cuenta
+    this.agregarMovimiento(LocalDate.now(),cuanto,true);
   }
 
   public void validarMontoNegativo(double cuanto){
@@ -71,7 +72,7 @@ public class Cuenta {
   public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
     Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
     movimientos.add(movimiento);
-  }//CODE SMELL,al agregar un movimiento podemos pedir el movimiento como parametro y no crear uno nuevo
+  }
 
   public double getMontoExtraidoA(LocalDate fecha) {
     return getMovimientos().stream()
