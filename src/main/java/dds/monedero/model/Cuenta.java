@@ -72,13 +72,16 @@ public class Cuenta {
     /*if (getSaldo() - cuanto < 0) {
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
     }//CODE SMELL,lo mismo para este tipo de excepciones*/
-    double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
+    this.validarExtraccionNoSupereLimite(cuanto);
+    /*double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
     double limite = 1000 - montoExtraidoHoy;
     if (cuanto > limite) {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
           + " diarios, límite: " + limite);
-    }
-    new Movimiento(LocalDate.now(), cuanto, false);
+    }*/
+    //new Movimiento(LocalDate.now(), cuanto, false);CODE SMELL, agregamos movimiento de extraccion
+    this.agregarMovimiento(LocalDate.now(),cuanto,false);
+    this.retirarSaldo(cuanto);
   }
 
   public void validarDineroDisponible(double cuanto){
@@ -87,9 +90,22 @@ public class Cuenta {
     }
   }
 
+  public void retirarSaldo(double cuanto){
+    saldo = getSaldo() - cuanto;
+  }
+
+  public void validarExtraccionNoSupereLimite(double cuanto){
+    double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
+    double limite = 1000 - montoExtraidoHoy;
+    if(cuanto > limite){
+      throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
+              + " diarios, límite: " + limite);
+    }
+  }
+
   public double getMontoExtraidoA(LocalDate fecha) {
     return getMovimientos().stream()
-        .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
+        .filter(movimiento -> movimiento.isExtraccion() && movimiento.esDeLaFecha(fecha))
         .mapToDouble(Movimiento::getMonto)
         .sum();
   }
